@@ -13,6 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import paziylet_uz.utils.exception.AlreadyExistsException;
 import paziylet_uz.utils.exception.NotFoundException;
+import paziylet_uz.utils.exception.TypesInError;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,14 +25,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {AlreadyExistsException.class})
     public ResponseEntity<?> handleCourseExists(AlreadyExistsException e, WebRequest request) {
-        return handleExceptionInternal(e,
-                _ALREADY_EXISTS.setMessage(e.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+        return _ALREADY_EXISTS.setMessage(e.getMessage()).handleResponse();
     }
 
     @ExceptionHandler(value = {NotFoundException.class})
     public ResponseEntity<?> handleFileNotFound(NotFoundException e, WebRequest request) {
-        return handleExceptionInternal(e,
-                _NOT_FOUND.setMessage(e.getMessage()), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+        return _NOT_FOUND.setMessage(e.getMessage()).handleResponse();
+    }
+
+    @ExceptionHandler(value = {TypesInError.class})
+    public ResponseEntity<?> handleFileNotFound(TypesInError e, WebRequest request) {
+        return _ILLEGAL_TYPES.setMessage(e.getMessage()).handleResponse();
     }
 
     @Override

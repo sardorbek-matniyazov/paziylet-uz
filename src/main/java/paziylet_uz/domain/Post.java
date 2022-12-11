@@ -1,5 +1,6 @@
 package paziylet_uz.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -7,18 +8,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import paziylet_uz.domain.based.BaseEntity;
+import paziylet_uz.domain.enums.PostType;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +31,9 @@ public class Post extends BaseEntity {
     private String title;
     @Column(name = "post_desc", nullable = false, length = 1_000_000)
     private String description;
+    @Column(name = "post_type", nullable = false, length = 30)
+    @Enumerated(EnumType.STRING)
+    private PostType type;
 
     @JoinTable(
             name = "post_images",
@@ -64,11 +59,13 @@ public class Post extends BaseEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> tags = new ArrayList<>();
 
+    @JsonIgnore
     @Column(name = "post_search_query")
     private String searchQuery;
 
-    public Post(String title1, String desc, List<String> tags) {
+    public Post(String title1, String desc, PostType type, List<String> tags) {
         this.title = title1;
+        this.type = type;
         this.description = desc;
         this.tags = tags;
     }

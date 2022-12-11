@@ -21,6 +21,7 @@ public class MyResponse {
     public static final MyResponse _ALREADY_EXISTS = new MyResponse(HttpStatus.BAD_REQUEST, false);
     public static final MyResponse _BAD_REQUEST = new MyResponse(HttpStatus.BAD_REQUEST, false);
     public static final MyResponse _NOT_FOUND = new MyResponse(HttpStatus.BAD_REQUEST, false);
+    public static final MyResponse _ILLEGAL_TYPES = new MyResponse(HttpStatus.BAD_REQUEST, false);
 
     private String message = "OK";
     private Integer status = 200;

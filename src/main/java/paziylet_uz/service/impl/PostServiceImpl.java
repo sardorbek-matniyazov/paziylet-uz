@@ -9,7 +9,9 @@ import paziylet_uz.repository.FileRepository;
 import paziylet_uz.repository.PostRepository;
 import paziylet_uz.service.PostService;
 import paziylet_uz.utils.exception.AlreadyExistsException;
+import paziylet_uz.utils.exception.TypesInError;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,9 +48,13 @@ public record PostServiceImpl(
     }
 
     @Override
-    public MyResponse create(PostDto dto, List<MultipartFile> files) {
+    public MyResponse create(@Valid PostDto dto, List<MultipartFile> files) {
+        if (dto.getTitle() == null || dto.getDescription() == null)
+            throw new TypesInError("Title or description is null");
+
         if (repository.existsByTitle(dto.getTitle()))
             throw new AlreadyExistsException("Post with name " + dto.getTitle() + " already exists");
+
         final Set<String> strings = saveImages(files);
         return _CREATED
                 .setMessage("Post created")
