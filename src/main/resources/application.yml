@@ -1,0 +1,24 @@
+server:
+  port: 3000
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  jackson:
+    date-format: dd MMMM yyyy HH:mm
+    time-zone: Asia/Tashkent
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/paziylet_uz
+    password: sardor2003
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        format_sql: true
+        enable_lazy_load_no_trans: true
