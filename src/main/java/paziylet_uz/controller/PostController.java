@@ -1,7 +1,6 @@
 package paziylet_uz.controller;
 
 import com.google.gson.Gson;
-import org.springframework.boot.json.GsonJsonParser;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,8 +11,6 @@ import paziylet_uz.service.PostService;
 import javax.validation.Valid;
 import java.util.List;
 
-import static paziylet_uz.payload.dao.MyResponse._DATA;
-
 @RestController
 @RequestMapping(value = "/post")
 public record PostController(
@@ -21,8 +18,8 @@ public record PostController(
         Gson gson
 ) {
     @GetMapping(value = "all")
-    public HttpEntity<?> getAllPosts() {
-        return service.getAllPosts().handleResponse();
+    public HttpEntity<?> getAllPosts(@RequestParam(name = "tag", required = false) String tag) {
+        return service.getAllPosts(tag).handleResponse();
     }
 
     @PostMapping(value = "create")

@@ -3,6 +3,7 @@ package paziylet_uz.service.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import paziylet_uz.domain.Attachment;
+import paziylet_uz.domain.Post;
 import paziylet_uz.payload.dao.MyResponse;
 import paziylet_uz.payload.dto.PostDto;
 import paziylet_uz.repository.FileRepository;
@@ -32,9 +33,15 @@ public record PostServiceImpl(
         FileRepository fileRepository
 ) implements PostService {
     @Override
-    public MyResponse getAllPosts() {
+    public MyResponse getAllPosts(String tag) {
+        List<Post> all;
+        if (tag != null) {
+            all = repository.findAllBySearchQueryLike(tag);
+        } else {
+            all = repository.findAll();
+        }
         return _DATA
-                .putData("data", repository.findAll())
+                .putData("data", all)
                 .putData("count", repository.count());
     }
 

@@ -7,7 +7,7 @@ import paziylet_uz.payload.dto.PostDto;
 import java.util.List;
 
 public interface PostService {
-    MyResponse getAllPosts();
+    MyResponse getAllPosts(String tag);
 
     MyResponse create(PostDto dto, List<MultipartFile> files);
 
