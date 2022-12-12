@@ -9,7 +9,7 @@ import paziylet_uz.service.FileService;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping(value = "api/file")
+@RequestMapping(value = "file")
 public record FileController(FileService service) {
 
     @GetMapping(value = "download/{fileName}")
