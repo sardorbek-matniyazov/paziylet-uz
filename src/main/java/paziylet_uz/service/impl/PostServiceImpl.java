@@ -1,10 +1,14 @@
 package paziylet_uz.service.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import paziylet_uz.domain.Attachment;
 import paziylet_uz.domain.Post;
 import paziylet_uz.payload.dao.MyResponse;
+import paziylet_uz.payload.dao.PagingResponse;
 import paziylet_uz.payload.dto.PostDto;
 import paziylet_uz.repository.FileRepository;
 import paziylet_uz.repository.PostRepository;
@@ -26,23 +30,38 @@ import java.util.stream.Collectors;
 import static paziylet_uz.payload.dao.MyResponse._CREATED;
 import static paziylet_uz.payload.dao.MyResponse._DATA;
 import static paziylet_uz.utils.constants.PathConstants._UPLOAD_DIR;
+import static paziylet_uz.utils.constants.SizeConstants._PAGE_LIMIT;
 
 @Service
 public record PostServiceImpl(
         PostRepository repository,
         FileRepository fileRepository
 ) implements PostService {
+
     @Override
-    public MyResponse getAllPosts(String tag) {
-        List<Post> all;
-        if (tag != null) {
-            all = repository.findAllBySearchQueryLike(tag);
-        } else {
-            all = repository.findAll();
-        }
+    public MyResponse getAllPosts(Integer page) {
+        final Page<Post> all = repository.findAll(
+                PageRequest.of(
+                        page - 1,
+                        _PAGE_LIMIT,
+                        Sort.by(
+                                Sort.Direction.DESC,
+                                "id"
+                        )
+                )
+        );
         return _DATA
-                .putData("data", all)
-                .putData("count", repository.count());
+                .putData("data", all.getContent())
+                .putData("pageable", new PagingResponse(
+                                all.getTotalPages(),
+                                all.getTotalElements(),
+                                all.getNumber(),
+                                all.getSize(),
+                                all.nextOrLastPageable().getPageNumber(),
+                                all.nextOrLastPageable().getPageSize(),
+                                all.isLast()
+                        )
+                );
     }
 
     @Override
@@ -52,6 +71,12 @@ public record PostServiceImpl(
         return _CREATED
                 .setMessage("Post created")
                 .putData("data", repository.save(dto.toEntity().setQuerySearch()));
+    }
+
+    @Override
+    public MyResponse searchPostsWithTag(String tag) {
+        return _DATA
+                .putData("data", repository.findAllBySearchQueryContaining(tag));
     }
 
     @Override
@@ -68,7 +93,7 @@ public record PostServiceImpl(
                 .putData("data", repository.save(dto.toEntity().setQuerySearch().setImages(strings)));
     }
 
-    private Set<String> saveImages (List<MultipartFile> files){
+    private Set<String> saveImages(List<MultipartFile> files) {
         return files.stream().filter(file -> file != null && !file.isEmpty()).map(
                 image -> {
                     StringBuilder builder = new StringBuilder(UUID.randomUUID().toString());

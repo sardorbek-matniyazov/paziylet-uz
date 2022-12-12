@@ -55,11 +55,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus status,
             WebRequest request
     ) {
-
-        Map<String, String> errors = new HashMap<>();
+        StringBuilder messages = new StringBuilder();
         methodArgumentNotValidException.getBindingResult()
-                .getAllErrors().forEach(it -> errors.put(((FieldError) it).getField(), it.getDefaultMessage()));
+                .getAllErrors().forEach(it -> messages.append(it.getDefaultMessage()).append(", "));
 
-        return _BAD_REQUEST.setMessage("Input types are in error").setBody(errors).handleResponse();
+        return _BAD_REQUEST.setMessage(messages.substring(0, messages.length() - 2)).handleResponse();
     }
 }

@@ -18,8 +18,17 @@ public record PostController(
         Gson gson
 ) {
     @GetMapping(value = "all")
-    public HttpEntity<?> getAllPosts(@RequestParam(name = "tag", required = false) String tag) {
-        return service.getAllPosts(tag).handleResponse();
+    public HttpEntity<?> getAllPosts(
+            @RequestParam(name = "page") Integer page
+    ) {
+        return service.getAllPosts(page).handleResponse();
+    }
+
+    @GetMapping(value = "search")
+    public HttpEntity<?> getAllPosts(
+            @RequestParam(name = "tag") String tag
+    ) {
+        return service.searchPostsWithTag(tag).handleResponse();
     }
 
     @PostMapping(value = "create")
