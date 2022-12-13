@@ -63,15 +63,15 @@ public class Post extends BaseEntity {
     @Column(name = "post_search_query")
     private String searchQuery;
 
-    public Post(String title1, String desc, PostType type, List<String> tags) {
-        this.title = title1;
+    public Post(String title, String desc, PostType type, List<String> tags) {
+        this.title = title;
         this.type = type;
         this.description = desc;
         this.tags = tags;
     }
 
     public Post setQuerySearch() {
-        this.searchQuery = this.title + this.description + tags.stream().reduce("", String::concat);
+        this.searchQuery = this.title + tags.stream().reduce(" ", (i, a) -> i + a + " ");
         return this;
     }
 
