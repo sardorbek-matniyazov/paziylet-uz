@@ -71,7 +71,7 @@ public class Post extends BaseEntity {
     }
 
     public Post setQuerySearch() {
-        this.searchQuery = this.title + this.description + tags.stream().reduce("", String::concat);
+        this.searchQuery = this.title + tags.stream().reduce(" ", (i, a) -> i + a + " ");
         return this;
     }
 

@@ -5,7 +5,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,26 +14,26 @@ import paziylet_uz.utils.exception.AlreadyExistsException;
 import paziylet_uz.utils.exception.NotFoundException;
 import paziylet_uz.utils.exception.TypesInError;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static paziylet_uz.payload.dao.MyResponse.*;
+import static paziylet_uz.payload.dao.MyResponse._ALREADY_EXISTS;
+import static paziylet_uz.payload.dao.MyResponse._BAD_REQUEST;
+import static paziylet_uz.payload.dao.MyResponse._ILLEGAL_TYPES;
+import static paziylet_uz.payload.dao.MyResponse._NOT_FOUND;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {AlreadyExistsException.class})
-    public ResponseEntity<?> handleCourseExists(AlreadyExistsException e, WebRequest request) {
+    public ResponseEntity<?> handleExists(AlreadyExistsException e, WebRequest request) {
         return _ALREADY_EXISTS.setMessage(e.getMessage()).handleResponse();
     }
 
     @ExceptionHandler(value = {NotFoundException.class})
-    public ResponseEntity<?> handleFileNotFound(NotFoundException e, WebRequest request) {
+    public ResponseEntity<?> handleNotFound(NotFoundException e, WebRequest request) {
         return _NOT_FOUND.setMessage(e.getMessage()).handleResponse();
     }
 
     @ExceptionHandler(value = {TypesInError.class})
-    public ResponseEntity<?> handleFileNotFound(TypesInError e, WebRequest request) {
+    public ResponseEntity<?> handleErrorWithTypes(TypesInError e, WebRequest request) {
         return _ILLEGAL_TYPES.setMessage(e.getMessage()).handleResponse();
     }
 
@@ -58,7 +57,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         StringBuilder messages = new StringBuilder();
         methodArgumentNotValidException.getBindingResult()
                 .getAllErrors().forEach(it -> messages.append(it.getDefaultMessage()).append(", "));
-
         return _BAD_REQUEST.setMessage(messages.substring(0, messages.length() - 2)).handleResponse();
     }
 }
