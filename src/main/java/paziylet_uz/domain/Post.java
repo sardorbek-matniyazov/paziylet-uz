@@ -63,8 +63,8 @@ public class Post extends BaseEntity {
     @Column(name = "post_search_query")
     private String searchQuery;
 
-    public Post(String title1, String desc, PostType type, List<String> tags) {
-        this.title = title1;
+    public Post(String title, String desc, PostType type, List<String> tags) {
+        this.title = title;
         this.type = type;
         this.description = desc;
         this.tags = tags;
