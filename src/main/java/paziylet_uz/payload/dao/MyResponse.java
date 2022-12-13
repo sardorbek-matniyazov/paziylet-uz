@@ -42,11 +42,6 @@ public class MyResponse {
         return this;
     }
 
-    public MyResponse setBody(Map body) {
-        this.body = body;
-        return this;
-    }
-
     public MyResponse putData(String key, Object value) {
         this.body.put(key, value);
         return this;
