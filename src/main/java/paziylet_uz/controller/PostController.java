@@ -46,8 +46,12 @@ public record PostController(
             String body,
             List<MultipartFile> files
     ) {
-        PostDto dto = gson.fromJson(body, PostDto.class);
-        System.out.println(dto);
+        PostDto dto;
+        try {
+            dto = gson.fromJson(body, PostDto.class);
+        } catch (Exception e) {
+            return MyResponse._ILLEGAL_TYPES.setMessage("Error while parsing json").handleResponse();
+        }
         MyResponse create = service.create(dto, files);
         return create.handleResponse();
     }
