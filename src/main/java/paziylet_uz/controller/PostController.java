@@ -43,16 +43,16 @@ public record PostController(
 
     @PostMapping(value = "create-part")
     public HttpEntity<?> createPostWithImages(
-            String body,
+            PostDto body,
             List<MultipartFile> files
     ) {
-        PostDto dto;
-        try {
-            dto = gson.fromJson(body, PostDto.class);
-        } catch (Exception e) {
-            return MyResponse._ILLEGAL_TYPES.setMessage("Error while parsing json").handleResponse();
-        }
-        MyResponse create = service.create(dto, files);
+//        PostDto dto;
+//        try {
+//            dto = gson.fromJson(body, PostDto.class);
+//        } catch (Exception e) {
+//            return MyResponse._ILLEGAL_TYPES.setMessage("Error while parsing json").handleResponse();
+//        }
+        MyResponse create = service.create(body, files);
         return create.handleResponse();
     }
 }
