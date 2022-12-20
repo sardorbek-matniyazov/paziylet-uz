@@ -14,4 +14,10 @@ public interface PostService {
     MyResponse create(PostDto dto);
 
     MyResponse searchPostsWithTag(String tag);
+
+    MyResponse update(Long id, PostDto dto, List<MultipartFile> files);
+
+    MyResponse removePostWithId(Long id);
+
+    MyResponse getPostWithId(Long id);
 }

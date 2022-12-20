@@ -11,7 +11,11 @@ import paziylet_uz.utils.exception.NotFoundException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static paziylet_uz.utils.constants.PathConstants._UPLOAD_DIR;
 
@@ -31,5 +35,19 @@ public record FileServiceImpl (
         File file = new File(_UPLOAD_DIR + fileName);
         response.setContentType(image.getContentType());
         FileCopyUtils.copy(new FileInputStream(file), response.getOutputStream());
+    }
+
+    @Override
+    @SneakyThrows
+    public void deleteFileWithFileNames(Set<String> fileName) {
+        fileName.forEach(
+                image -> {
+                    try {
+                        Files.delete(new File(_UPLOAD_DIR + image).toPath());
+                    } catch (IOException e) {
+                        throw new NotFoundException("File not found with name " + image);
+                    }
+                }
+        );
     }
 }

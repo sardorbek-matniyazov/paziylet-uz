@@ -9,4 +9,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     boolean existsByTitle(String title);
 
     List<Post> findAllBySearchQueryContaining(String tag);
+
+    boolean existsByTitleAndIdIsNot(String title, Long id);
 }
