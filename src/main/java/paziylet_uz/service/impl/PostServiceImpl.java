@@ -115,6 +115,8 @@ public record PostServiceImpl(
         final Post post = repository.findById(id).orElseThrow(
                 () -> new NotFoundException("File not found with id " + id)
         );
+
+        repository.deleteById(id);
         fileService.deleteFileWithFileNames(post.getImages());
         return MyResponse._DELETED;
     }
